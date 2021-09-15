@@ -1,0 +1,272 @@
+/*
+COLORS:
+
+Light green: #7ed56f
+Medium green: #55c57a
+Dark green: #28b485
+
+Convert pixels to rem (root font size)
+    - change all the measurements in all devices with one setting
+    - global font size 
+*/
+
+
+/* 
+    Reset with universal selector
+*/
+
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    /* box-sizing by itself is not inherit */
+    box-sizing: inherit;
+}
+
+html {
+    /* 
+        1rem = 10px --> 1px = 0.1rem 
+        bad practice: override user's custom font size
+        change it to percentage > so it will change along with user setting
+    */
+    /* font-size: 10px; */
+    font-size: 62.5%;
+}
+
+
+/* 
+    Be inherited by child elements
+*/
+
+body {
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    /* font-size: 16px; */
+    font-size: 1.6rem;
+    line-height: 1.7;
+    color: #777;
+    /* padding won't get inherited - the entire page get this padding */
+    padding: 3rem;
+    /* better performance: in case plugins or other elements need a different property of box-sizing */
+    box-sizing: border-box;
+}
+
+.header {
+    /* the height of the element is 95% of the viewpoint height */
+    height: 95vh;
+    /* gradient + image + opacity */
+    background-image: linear-gradient( to right bottom, rgba(126, 213, 111, 0.8), rgba(40, 180, 133, 0.8)), url(../img/hero.jpg);
+    /* fit the image to the size of the element */
+    background-size: cover;
+    /* the top of the image stays the same, but the bottom / center get cropped. */
+    background-position: top;
+    /* parent element of logo-box where top and left starts */
+    position: relative;
+    /* 
+        specify four corners: top-left(0, 0), top-right, bottom-right, bottom-left 
+        triangle: polygon(0 0, 100% 50%, 100% 50%, 0 100%)
+    */
+    clip-path: polygon(0 0, 100% 0, 100% 75vh, 0 100%);
+}
+
+
+/* absolute positioning */
+
+.logo-box {
+    position: absolute;
+    top: 4rem;
+    left: 4rem;
+}
+
+.logo {
+    /* width will be set automatically by the browser */
+    height: 3.5rem;
+}
+
+
+/* animation can be used not only when the page has been loaded
+.logo:hover {
+    animation: moveInRight 2s ease-out;
+} */
+
+
+/*  make title centralized regardless the size of the screen
+    absolute (relative to parent element) + transform (about itself)
+        Its coordinates define how much the element moves in each direction.
+*/
+
+.text-box {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* set inline block [button, treated as text] to be centralized */
+    text-align: center;
+}
+
+.heading-primary {
+    color: #fff;
+    text-transform: uppercase;
+    /* used to solve the shaky animation - 
+       when animation happens, the back part of the element is hidden
+    */
+    backface-visibility: hidden;
+    margin-bottom: 6rem;
+}
+
+
+/* transform to block element:
+    1. occupy the whole line
+    2. add line break before and after the element
+
+   animation: fade in + move in from different sides
+    1. transition: for browser optimization, it's better to only use transform + opacity
+    2. @keyframes
+   
+*/
+
+.heading-primary-main {
+    display: block;
+    font-size: 6rem;
+    font-weight: 400;
+    letter-spacing: 3.5rem;
+    animation-name: moveInLeft;
+    animation-duration: 1s;
+    /* how a css animation should progress over the duration of time */
+    animation-timing-function: ease-out;
+    /*  animation-delay: 3s; 
+        animation-iteration-count: 3;
+     */
+}
+
+.heading-primary-sub {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1.75rem;
+    animation: moveInRight 1s ease-out;
+}
+
+@keyframes moveInLeft {
+    /* 
+        specify what happens in each moment - timestamp
+        0% initial state
+        100% final state
+     */
+    0% {
+        opacity: 0;
+        transform: translateX(-10rem);
+    }
+    80% {
+        transform: translate(1rem);
+        /* transform: translate(10px) rotate(120deg); */
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+@keyframes moveInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(10rem);
+    }
+    80% {
+        transform: translate(-1rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+@keyframes moveInBottom {
+    0% {
+        opacity: 0;
+        /* lower before animation starts */
+        transform: translateY(3rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+
+/* pseudo-class: a special state of the selector to style class in special condition */
+
+.btn:link,
+.btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1.5rem 4rem;
+    display: inline-block;
+    border-radius: 10rem;
+    /* enable all the properties - transition has to be in the initial state */
+    transition: all .2s;
+    position: relative;
+}
+
+.btn:hover {
+    /* move up -> bottom to up*/
+    transform: translateY(-.3rem);
+    /* box-shadow: x y blur color */
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, .2);
+}
+
+.btn:active {
+    /* related to the initial state [btn:link] 
+        move down a bit compared to hover state
+    */
+    transform: translateY(-.1rem);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .2);
+}
+
+.btn-white {
+    background-color: #fff;
+    color: #777;
+}
+
+
+/* 
+    pseudo-element: style certain parts of the element 
+    ::after - add a virtual element right after the element
+
+    put it behind the actual button
+*/
+
+.btn::after {
+    /* specify the content to make it appear */
+    content: "";
+    display: inline-block;
+    /* exact the same as the button - treated as a child of the button */
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* defines the position if is on top of the other */
+    z-index: -1;
+    transition: all .4s;
+}
+
+.btn-white::after {
+    background-color: #fff;
+}
+
+.btn:hover::after {
+    /* pseudo-element to grow(transform-scale) and fade out(opacity) */
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}
+
+.btn-animated {
+    /* delay - occurs after two other animations */
+    animation: moveInBottom .5s ease-out .75s;
+    /* The animation will apply the values defined in the first relevant keyframe 
+       as soon as it is applied to the target, and retain this during the animation-delay period. */
+    animation-fill-mode: backwards;
+}

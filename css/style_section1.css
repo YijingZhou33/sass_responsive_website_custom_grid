@@ -1,0 +1,253 @@
+/*
+COLORS:
+
+Light green: #7ed56f
+Medium green: #55c57a
+Dark green: #28b485
+
+*/
+
+
+/* 
+    Reset with universal selector
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* 
+    Be inherited by child elements
+*/
+
+body {
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #777;
+    /* padding won't get inherited - the entire page get this padding */
+    padding: 30px;
+}
+
+.header {
+    /* the height of the element is 95% of the viewpoint height */
+    height: 95vh;
+    /* gradient + image + opacity */
+    background-image: linear-gradient( to right bottom, rgba(126, 213, 111, 0.8), rgba(40, 180, 133, 0.8)), url(../img/hero.jpg);
+    /* fit the image to the size of the element */
+    background-size: cover;
+    /* the top of the image stays the same, but the bottom / center get cropped. */
+    background-position: top;
+    /* parent element of logo-box where top and left starts */
+    position: relative;
+    /* 
+        specify four corners: top-left(0, 0), top-right, bottom-right, bottom-left 
+        triangle: polygon(0 0, 100% 50%, 100% 50%, 0 100%)
+    */
+    clip-path: polygon(0 0, 100% 0, 100% 75vh, 0 100%);
+}
+
+
+/* absolute positioning */
+
+.logo-box {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.logo {
+    /* width will be set automatically by the browser */
+    height: 35px;
+}
+
+
+/* animation can be used not only when the page has been loaded
+.logo:hover {
+    animation: moveInRight 2s ease-out;
+} */
+
+
+/*  make title centralized regardless the size of the screen
+    absolute (relative to parent element) + transform (about itself)
+        Its coordinates define how much the element moves in each direction.
+*/
+
+.text-box {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* set inline block [button, treated as text] to be centralized */
+    text-align: center;
+}
+
+.heading-primary {
+    color: #fff;
+    text-transform: uppercase;
+    /* used to solve the shaky animation - 
+       when animation happens, the back part of the element is hidden
+    */
+    backface-visibility: hidden;
+    margin-bottom: 60px;
+}
+
+
+/* transform to block element:
+    1. occupy the whole line
+    2. add line break before and after the element
+
+   animation: fade in + move in from different sides
+    1. transition: for browser optimization, it's better to only use transform + opacity
+    2. @keyframes
+   
+*/
+
+.heading-primary-main {
+    display: block;
+    font-size: 60px;
+    font-weight: 400;
+    letter-spacing: 35px;
+    animation-name: moveInLeft;
+    animation-duration: 1s;
+    /* how a css animation should progress over the duration of time */
+    animation-timing-function: ease-out;
+    /*  animation-delay: 3s; 
+        animation-iteration-count: 3;
+     */
+}
+
+.heading-primary-sub {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 17.5px;
+    animation: moveInRight 1s ease-out;
+}
+
+@keyframes moveInLeft {
+    /* 
+        specify what happens in each moment - timestamp
+        0% initial state
+        100% final state
+     */
+    0% {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    80% {
+        transform: translate(10px);
+        /* transform: translate(10px) rotate(120deg); */
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+@keyframes moveInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    80% {
+        transform: translate(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+@keyframes moveInBottom {
+    0% {
+        opacity: 0;
+        /* lower before animation starts */
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+
+/* pseudo-class: a special state of the selector to style class in special condition */
+
+.btn:link,
+.btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 15px 40px;
+    display: inline-block;
+    border-radius: 100px;
+    /* enable all the properties - transition has to be in the initial state */
+    transition: all .2s;
+    position: relative;
+}
+
+.btn:hover {
+    /* move up -> bottom to up*/
+    transform: translateY(-3px);
+    /* box-shadow: x y blur color */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .2);
+}
+
+.btn:active {
+    /* related to the initial state [btn:link] 
+        move down a bit compared to hover state
+    */
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+.btn-white {
+    background-color: #fff;
+    color: #777;
+}
+
+
+/* 
+    pseudo-element: style certain parts of the element 
+    ::after - add a virtual element right after the element
+
+    put it behind the actual button
+*/
+
+.btn::after {
+    /* specify the content to make it appear */
+    content: "";
+    display: inline-block;
+    /* exact the same as the button - treated as a child of the button */
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* defines the position if is on top of the other */
+    z-index: -1;
+    transition: all .4s;
+}
+
+.btn-white::after {
+    background-color: #fff;
+}
+
+.btn:hover::after {
+    /* pseudo-element to grow(transform-scale) and fade out(opacity) */
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}
+
+.btn-animated {
+    /* delay - occurs after two other animations */
+    animation: moveInBottom .5s ease-out .75s;
+    /* The animation will apply the values defined in the first relevant keyframe 
+       as soon as it is applied to the target, and retain this during the animation-delay period. */
+    animation-fill-mode: backwards;
+}

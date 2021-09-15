@@ -1,0 +1,93 @@
+.popup {
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3000;
+    // if only set opacity, content and text are still clickable
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s;
+    // past: only safari supports this properties, use @support to achieve graceful degradation
+    @supports(-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {
+        // apply a blur to everything behind popup
+        background-color: rgba($color-black, .3);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+    &__content {
+        @include center-block;
+        background-color: $color-white;
+        z-index: 3500;
+        border-radius: 3px;
+        width: 75%;
+        box-shadow: 0 2rem 4rem rgba($color-black, .3);
+        display: table;
+        // avoid picture overlaps the border
+        overflow: hidden;
+        opacity: 0;
+        // scale wont' work because one element can only retain one transform property
+        // in the "center-block" > repeat translate again
+        transform: translate(-50%, -50%) scale(.25);
+        // .2s delay transition > background comes in first, then popup fades in
+        transition: all .4s .2s;
+    }
+    &__left {
+        width: 33.33333%;
+        display: table-cell;
+    }
+    &__right {
+        width: 66.66667%;
+        display: table-cell;
+        vertical-align: middle;
+        padding: 3rem 5rem;
+    }
+    &__img {
+        display: block;
+        width: 100%;
+    }
+    &__text {
+        font-size: 1.4rem;
+        // create 2 columns for paragraph
+        column-count: 2;
+        // by default the gap is 1em (14px font-size of current element)
+        column-gap: 4rem;
+        // put a vertical line between 
+        column-rule: 1px solid $color-grey-light-2;
+        -moz-column-count: 2;
+        -moz-column-gap: 4rem;
+        -moz-column-rule: 1px solid $color-grey-light-2;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        -webkit-hyphens: auto;
+        hyphens: auto;
+    }
+    // OPEN STATES
+    &:target {
+        opacity: 1;
+        visibility: visible;
+    }
+    &:target &__content {
+        // popup zoom toward 
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    &__close {
+        &:link,
+        &:visited {
+            text-decoration: none;
+            color: $color-grey-dark-3;
+            font-size: 3rem;
+            display: inline-block;
+            position: absolute;
+            top: 2.5rem;
+            right: 2.5rem;
+            transition: all .2s;
+            line-height: 1;
+        }
+        &:hover {
+            color: $color-primary;
+        }
+    }
+}

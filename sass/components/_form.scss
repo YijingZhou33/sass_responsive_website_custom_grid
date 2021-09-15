@@ -1,0 +1,103 @@
+.form {
+    &__group:not(:last-child) {
+        margin-bottom: 2rem;
+    }
+    &__input {
+        // by default, input element doesn't inherit font property
+        font-family: inherit;
+        font-size: 1.5rem;
+        color: inherit;
+        // more space on the sides
+        padding: 1.5rem 2rem;
+        border-radius: 2px;
+        background-color: rgba($color-white, .5);
+        border: none;
+        // as focuses on the first input, the second input will move down because of the border width
+        // add another transparent border
+        border-bottom: 3px solid transparent;
+        // have its own line
+        display: block;
+        width: 90%;
+        @include respond(tab-port) {
+            width: 100%;
+        }
+        &:focus {
+            // focus state: blue line, important for users without mouse
+            outline: none;
+            box-shadow: 0 1rem 2rem rgba($color-black, .1);
+            border-bottom: 3px solid $color-primary;
+            // chrome check the input validation based on input type: invalid / valid
+            &:invalid {
+                border-bottom: 3px solid $color-secondary-dark;
+            }
+        }
+        // :: pseudo-elements exist on the website
+        &::-webkit-input-placeholder {
+            color: $color-grey-dark-2;
+        }
+    }
+    &__label {
+        display: block;
+        margin-top: .7rem;
+        margin-left: 2rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        transition: all .3s;
+    }
+    // when placeholder shows, hide the label
+    // input and label are siblings -> sibling selector
+    // adjacent sibling selector (+): one comes after another immediately [must be after]
+    // general sibling selector (~): more levels between
+    &__input:placeholder-shown+&__label {
+        // use opacity to animate the element
+        opacity: 0;
+        visibility: hidden;
+        // move down
+        transform: translateY(-4rem);
+    }
+    &__radio-group {
+        width: 49%;
+        display: inline-block;
+        @include respond(tab-port) {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+    }
+    &__radio-input {
+        visibility: hidden;
+    }
+    &__radio-label {
+        // make it look like a link
+        cursor: pointer;
+        position: relative;
+        padding-left: 2.5rem;
+    }
+    &__radio-button {
+        height: 3rem;
+        width: 3rem;
+        border: 5px solid $color-primary;
+        border-radius: 50%;
+        display: inline-block;
+        position: absolute;
+        left: -1.5rem;
+        top: -.5rem;
+        // specify the content when using pseudo element
+        &::after {
+            content: "";
+            display: block;
+            height: 1.2rem;
+            width: 1.2rem;
+            border-radius: 50%;
+            background-color: $color-primary;
+            // centered 
+            @include center-block;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+    }
+    // radio-input and radio-label is siblings 
+    // radio-button::after is child of radio-label
+    &__radio-input:checked~&__radio-label>&__radio-button::after {
+        opacity: 1;
+    }
+}
